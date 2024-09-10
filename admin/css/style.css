@@ -1,0 +1,37 @@
+.container{
+	border: 2px solid #e4e01d;
+}
+
+
+.col{
+	border: 2px solid green;
+}
+body{
+	background: rgb(64, 162, 195);
+}
+#header{
+	background: orange;
+}
+#menu{
+	background: pink;
+	padding: 3px 0px;
+}
+#menu ul{
+	list-style:none;
+	margin: 3px;
+}
+#menu ul li{
+	display:inline-block;
+}
+#content{
+	background: white;
+}
+#sidebar{
+	background:lightblue;
+}
+#sidebar ul{
+	list-style:none;
+}
+#footer{
+	background: orange;
+}
