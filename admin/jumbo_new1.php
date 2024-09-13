@@ -23,12 +23,12 @@
 }
 
 .table-responsive {
-    height: 60%;
+    height: 400px;
     overflow-x: auto;
 }
 
 thead {
-    background-color: #f1f1f1;
+    background-color: #6491E3 !important;
     /* Change as needed */
     position: sticky;
     top: 0;
@@ -79,7 +79,7 @@ input.form-control {
                                 </div>
                                 <div class="table-responsive mt-2 ">
                                     <table id="myTable" class="table-bordered">
-                                        <thead class="bg-primary text-light position-sticky">
+                                        <thead class="bg-blue text-light position-sticky">
                                             <tr>
                                                 <th class="text-center fs-7 ps-1 pe-1"><label for="">S.No. </label></th>
                                                 <th class="text-center fs-7 ps-3 pe-4"><label for="">Jumbo no.</label>

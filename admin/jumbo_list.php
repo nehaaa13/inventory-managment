@@ -64,7 +64,7 @@
                                 <input class="ps-3 pe-4 mb-1 fw-bold text-center top-date" type="date" id="input-date"
                                     name="date" value="<?php echo date('Y-m-d'); ?>" onchange="filterByDate()">
                                 <!-- Add Table -->
-                                <table id="table" class="table  table-bordered">
+                                <table id="table" class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Type/Roll</th>
