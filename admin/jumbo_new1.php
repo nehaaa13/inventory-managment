@@ -233,10 +233,10 @@ input.form-control {
                                                         min="0.00" max="9999.99" required></td>
                                                 <td><input type="text" name="grade"
                                                         class="form-control jumbo-input fw-bold text-center"
-                                                        pattern="[A-Z]+" title="Capital letters allowed" required></td>
+                                                        pattern="[LHB]" title="Only 'L', 'H', or 'B' are allowed" required></td>
                                                 <td><input type="text" name="remark"
                                                         class="form-control jumbo-input fw-bold text-center"
-                                                        pattern="[A-Z]+" title="Capital letters allowed"></td>
+                                                        pattern="[A-Z]+" title="Only capital letters allowed"></td>
                                                 <td><button type="submit" name="submit" class="btn btn-success"
                                                         style="margin:0px">Submit</button>
                                                     <!-- Add more columns here -->
@@ -277,34 +277,45 @@ if (isset($_POST['submit'])) {
     $weight = isset($_POST['weight']) ? $_POST['weight'] : '';
     $grade = isset($_POST['grade']) ? $_POST['grade'] : '';
     $remark = isset($_POST['remark']) ? $_POST['remark'] : '';
+ 
 
     // Check if the record already exists
     $sql_check = "SELECT * FROM bopprod WHERE sr_code = '$sr_code'";
     $result_check = mysqli_query($config, $sql_check);
     
     if (mysqli_num_rows($result_check) > 0) {
-        echo "<script>alert('Jumbo entry already exists')</script>";
-    } else {
-        // Insert data into the first table (bopprod)
-        $sql1 = "INSERT INTO `bopprod`(`manual_date`,`sr_code`,`prd_code`,`core`,`width`,`shift`,`in`,`out`,`length`,`joints`,`gweight`,`weight`,`grade`,`sp_grd`,`remark`) 
-                 VALUES('$manual_date','$sr_code','$type','$core','$width','$shift','$in','$out','$length','$joints','$gweight','$weight','$grade','JL','$remark')";
+    echo "<script>alert('Jumbo entry already exists')</script>";
+} else {
+    // Concatenate sp_grd and grade
+    $sp_grd = 'J' . $grade; // Concatenate 'J' with the entered grade (L, H, or B)
 
-        // Insert data into the second table (boppstk)
-        $sql2 = "INSERT INTO `boppstk`(`manual_date`,`sr_code`,`prd_code`,`core`,`width`,`shift`,`in`,`out`,`length`,`joints`,`gweight`,`weight`,`grade`,`sp_grd`,`location`,`remark`) 
-                 VALUES('$manual_date','$sr_code','$type','$core','$width','$shift','$in','$out','$length','$joints','$gweight','$weight','$grade','JL','J','$remark')";
+    // Insert data into the first table (bopprod)
+    $sql1 = "INSERT INTO `bopprod`(`manual_date`,`sr_code`,`prd_code`,`core`,`width`,`shift`,`in`,`out`,`length`,`joints`,`gweight`,`weight`,`sp_grd`,`grade`,`remark`,`username`) 
+             VALUES('$manual_date','$sr_code','$type','$core','$width','$shift','$in','$out','$length','$joints','$gweight','$weight','$sp_grd','$grade','$remark','$username')";
 
-        // Execute both queries
-        $query1_success = mysqli_query($config, $sql1);
-        $query2_success = mysqli_query($config, $sql2);
+    // Insert data into the second table (boppstk)
+    $sql2 = "INSERT INTO `boppstk`(`manual_date`,`sr_code`,`prd_code`,`core`,`width`,`shift`,`in`,`out`,`length`,`joints`,`gweight`,`weight`,`sp_grd`,`grade`,`location`,`remark`, `username`) 
+             VALUES('$manual_date','$sr_code','$type','$core','$width','$shift','$in','$out','$length','$joints','$gweight','$weight','$sp_grd','$grade','J','$remark', '$username')";
 
-        if ($query1_success && $query2_success) {
-            // If both queries are successful
-            echo "<script>alert('Data has been inserted into both tables'); window.location.reload();</script>";
-        } else {
-            // Error occurred
-            echo "<script>alert('Error occurred while inserting data')</script>";
-        }
+    // Execute both queries and log errors if any
+    $query1_success = mysqli_query($config, $sql1);
+    if (!$query1_success) {
+        echo "<script>alert('Error in SQL1: " . mysqli_error($config) . "')</script>";
     }
+
+    $query2_success = mysqli_query($config, $sql2);
+    if (!$query2_success) {
+        echo "<script>alert('Error in SQL2: " . mysqli_error($config) . "')</script>";
+    }
+
+    if ($query1_success && $query2_success) {
+        // If both queries are successful
+        echo "<script>alert('Data has been inserted into both tables'); window.location.reload();</script>";
+    } else {
+        // Error occurred
+        echo "<script>alert('Error occurred while inserting data')</script>";
+    }
+}
 }
 ?>
 

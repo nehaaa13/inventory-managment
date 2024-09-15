@@ -74,7 +74,7 @@ if (!isset($_SESSION['user_data'])){
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span
-                                    class="mr-2 d-none d-lg-inline text-light-600 small">
+                                    class="mr-2 d-none d-lg-inline text-light small">
                                     <?php
                                           if (isset($_SESSION['user_data'])){
                                              echo $_SESSION['user_data']['1'];

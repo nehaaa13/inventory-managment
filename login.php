@@ -7,6 +7,18 @@ if (isset($_SESSION['user_data'])){
   $sql = $conn->query("Insert into userlog (username) values ('$username')");
 }
 ?>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>JKM Login</title>
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <link href="vendor/css/sb-admin-2.css" rel="stylesheet">
+
+    
+</head>
 <style>
 .login-div {
     padding: 30px 80px 30px 80px;
@@ -49,6 +61,7 @@ if (isset($_SESSION['user_data'])){
                             echo "<p class='ms-1 p-2 text-danger'>".$error."</p>";
                             unset($_SESSION['error']);
                         }
+
                     ?>
                 </form>
             </div>
