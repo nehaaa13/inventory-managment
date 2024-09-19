@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
     <link href="vendor/css/sb-admin-2.css" rel="stylesheet">
 
-    
+
 </head>
 <style>
 #main-content {
@@ -34,6 +34,16 @@ thead {
     top: 0;
 }
 
+.submit-position {
+    position: sticky;
+    top: 0;
+    /* Adjust the top value if necessary */
+    background-color: #ffffff;
+    /* Ensure the background doesn't get transparent */
+    z-index: 1;
+    /* Make sure it's above other rows */
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -51,11 +61,10 @@ input.form-control {
 
 <!--  Config Connection -->
 <?php include 'config.php'; ?>
-<div class="container-fluid p-0">
+<div class="container-fluid">
     <div class="row">
-        <div>
-            <?php include "header.php"?>
-        </div>
+
+        <?php include "header.php"?>
         <div class="d-flex">
             <div>
                 <!-- Sidebar -->
@@ -75,7 +84,6 @@ input.form-control {
                                 <div class="col-md-12">
                                     <input class="ps-3 pe-4 fw-bold text-center top-date" type="date" id="input-date"
                                         name="date" value="<?php echo date('Y-m-d'); ?>" onchange="filterTable()">
-
                                 </div>
                                 <div class="table-responsive mt-2 ">
                                     <table id="myTable" class="table-bordered">
@@ -149,7 +157,7 @@ input.form-control {
                                                             }
                                                 ?>
 
-                                            <tr>
+                                            <tr class="submit-position">
                                                 <?php echo "<td class=''> " . $serialNumber . "</td>"; ?>
 
 
@@ -233,7 +241,8 @@ input.form-control {
                                                         min="0.00" max="9999.99" required></td>
                                                 <td><input type="text" name="grade"
                                                         class="form-control jumbo-input fw-bold text-center"
-                                                        pattern="[LHB]" title="Only 'L', 'H', or 'B' are allowed" required></td>
+                                                        pattern="[LHB]" title="Only 'L', 'H', or 'B' are allowed"
+                                                        required></td>
                                                 <td><input type="text" name="remark"
                                                         class="form-control jumbo-input fw-bold text-center"
                                                         pattern="[A-Z]+" title="Only capital letters allowed"></td>
@@ -247,8 +256,8 @@ input.form-control {
                                 <div class="row">
                                     <div class="col-md-5"></div>
                                     <div class="col-md-7">
-                                        <button type="submit" name="print"onclick="printJumboList()" class="btn btn-primary "
-                                            style="margin:10px">Print</button>
+                                        <button type="submit" name="print" onclick="printJumboList()"
+                                            class="btn btn-primary " style="margin:10px">Print</button>
                                     </div>
                                 </div>
                             </form>
@@ -288,14 +297,66 @@ if (isset($_POST['submit'])) {
 } else {
     // Concatenate sp_grd and grade
     $sp_grd = 'J' . $grade; // Concatenate 'J' with the entered grade (L, H, or B)
+    
+    $currentMonth = date('n'); // 'n' gives the current month number (1-12)
+    $currentYear = date('Y');  // 'Y' gives the full year (e.g., 2024)
+
+    // Determine the letter for m_code based on the current month (January - April)
+    $m_code = '';
+    switch($currentMonth) {
+        case 1:
+            $m_code = 'A';
+            break;
+        case 2:
+            $m_code = 'B';
+            break;
+        case 3:
+            $m_code = 'C';
+            break;
+        case 4:
+            $m_code = 'D';
+            break;
+        case 5:
+            $m_code = 'E';
+            break;
+        case 6:
+            $m_code = 'F';
+            break;
+        case 7:
+            $m_code = 'G';
+            break;
+        case 8:
+            $m_code = 'H';
+            break;
+        case 9:
+            $m_code = 'I';
+            break;
+        case 10:
+            $m_code = 'J';
+            break;
+        case 11:
+            $m_code = 'K';
+            break;
+        case 12:
+            $m_code = 'L';
+            break;
+            
+        // Add more cases if needed for other months or modify logic accordingly
+    }
+
+    // Get the last digit of the current year
+    $yearLastDigit = substr($currentYear, -1);
+
+    // Append the last digit of the year to the month code
+    $m_code .= $yearLastDigit;  // For example, it will become A4, B4, C4, or D4
 
     // Insert data into the first table (bopprod)
-    $sql1 = "INSERT INTO `bopprod`(`manual_date`,`sr_code`,`prd_code`,`core`,`width`,`shift`,`in`,`out`,`length`,`joints`,`gweight`,`weight`,`sp_grd`,`grade`,`remark`,`username`) 
-             VALUES('$manual_date','$sr_code','$type','$core','$width','$shift','$in','$out','$length','$joints','$gweight','$weight','$sp_grd','$grade','$remark','$username')";
+    $sql1 = "INSERT INTO `bopprod`(`manual_date`,`sr_code`,`prd_code`,`core`,`width`,`shift`,`in`,`out`,`length`,`joints`,`gweight`,`weight`,`sp_grd`,`grade`,`remark`,`username`,`m_code`) 
+             VALUES('$manual_date','$sr_code','$type','$core','$width','$shift','$in','$out','$length','$joints','$gweight','$weight','$sp_grd','$grade','$remark','$username','$m_code')";
 
     // Insert data into the second table (boppstk)
-    $sql2 = "INSERT INTO `boppstk`(`manual_date`,`sr_code`,`prd_code`,`core`,`width`,`shift`,`in`,`out`,`length`,`joints`,`gweight`,`weight`,`sp_grd`,`grade`,`location`,`remark`, `username`) 
-             VALUES('$manual_date','$sr_code','$type','$core','$width','$shift','$in','$out','$length','$joints','$gweight','$weight','$sp_grd','$grade','J','$remark', '$username')";
+    $sql2 = "INSERT INTO `boppstk`(`manual_date`,`sr_code`,`prd_code`,`core`,`width`,`shift`,`in`,`out`,`length`,`joints`,`gweight`,`weight`,`sp_grd`,`grade`,`location`,`remark`, `username`,`m_code`) 
+             VALUES('$manual_date','$sr_code','$type','$core','$width','$shift','$in','$out','$length','$joints','$gweight','$weight','$sp_grd','$grade','J','$remark', '$username', '$m_code')";
 
     // Execute both queries and log errors if any
     $query1_success = mysqli_query($config, $sql1);
@@ -343,16 +404,16 @@ if (window.history.replaceState) {
 </script>
 <!-- PRINT OF LIST -->
 <script>
-        function printJumboList() {
-            var printWindow = window.open('jumbo_list.php', '_blank');
-            printWindow.focus(); // Focus on the new window
+function printJumboList() {
+    var printWindow = window.open('jumbo_list.php', '_blank');
+    printWindow.focus(); // Focus on the new window
 
-            // Wait for the page to load, then trigger the print
-            printWindow.onload = function() {
-                printWindow.print();
-                printWindow.onafterprint = function() {
-                    printWindow.close(); // Automatically close after printing
-                }
-            };
+    // Wait for the page to load, then trigger the print
+    printWindow.onload = function() {
+        printWindow.print();
+        printWindow.onafterprint = function() {
+            printWindow.close(); // Automatically close after printing
         }
-    </script>
+    };
+}
+</script>
